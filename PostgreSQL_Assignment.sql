@@ -91,7 +91,7 @@ FROM sightings
 WHERE location LIKE '%Pass%';
 
 -- Problem 4 --> List each ranger's name and their total number of sightings.
-SELECT rangers.name AS ranger_name, count(*) AS total_sightings
+SELECT rangers.name AS ranger_name, count(sightings.sighting_id) AS total_sightings
 FROM rangers 
 LEFT JOIN sightings ON rangers.ranger_id = sightings.sighting_id
 GROUP BY rangers.name
@@ -100,8 +100,8 @@ ORDER BY total_sightings DESC;
 -- Problem 5 --> List species that have never been sighted.
 SELECT species.common_name, species.scientific_name 
 FROM species 
-LEFT JOIN sightings ON sightings.sighting_id = species.species_id
-WHERE species.species_id IS NULL;
+LEFT JOIN sightings ON species.species_id = sightings.species_id
+WHERE sightings.species_id IS NULL;
 
 -- Problem 6 --> Show the most recent 2 sightings.
 SELECT * FROM sightings
@@ -124,10 +124,8 @@ FROM sightings;
 
 -- Problem 9 -->  Delete rangers who have never sighted any species
 DELETE FROM rangers
-WHERE NOT EXISTS(
-SELECT 1
-FROM sightings
-WHERE sightings.sighting_id = rangers.ranger_id
+WHERE ranger_id NOT IN(
+SELECT DISTINCT ranger_id FROM sightings
 );
 
 
