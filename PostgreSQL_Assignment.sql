@@ -132,5 +132,3 @@ WHERE sightings.sighting_id = rangers.ranger_id
 
 
 
-SELECT * FROM sightings
-
